@@ -1,89 +1,57 @@
-# Open Fleet Safety
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Lucineer/capitaine/master/docs/capitaine-logo.jpg" alt="Capitaine" width="120">
+</p>
 
-**Status:** Research
-**Source:** Llama-4-Scout-17B-16E (DeepInfra) — AI safety researcher persona
-**Date:** 2026-04-04
+<h1 align="center">open-fleet-safety</h1>
 
-## Overview
+<p align="center">Open protocol for fleet-wide safety standards.</p>
 
-An open agent fleet where anyone can fork, modify, and deploy agents creates unique security challenges. This research identifies the top 5 failure modes and proposes defenses that preserve openness.
+---
 
-## Top 5 Failure Modes
+**Concept repo** · Part of the [Lucineer fleet](https://github.com/orgs/Lucineer/repositories)
 
-### 1. Prompt Injection at Scale (Severity: 8/10)
-**Description:** Malicious actors inject crafted prompts into fleet input streams, causing agents to produce unintended or harmful outputs at scale.
-**Attack Vector:** Through APIs, user interfaces, or by compromising agent vessels. A single injection could cascade across bonded vessels via CRP-39.
-**Defense:**
-- Input sanitization layers with PII detection (already built)
-- Per-vessel prompt budgets and rate limiting
-- CRP-39 trust attestation verifies vessel identity before accepting commands
-- "Quarantine first, ask questions later" — suspicious inputs trigger automatic quarantine
+Research, specification, or concept exploration for the cocapn ecosystem.
 
-### 2. Adversarial Vessels (Severity: 9/10)
-**Description:** Attacker forks a vessel, modifies behavior, and deploys within the fleet — potentially exploiting trust relationships.
-**Attack Vector:** Fork → modify → deploy with same KV namespace bindings. The vessel looks legitimate but behaves maliciously.
-**Defense:**
-- **Vessel signing**: Cryptographic signatures on deployed code (git commit hash verification)
-- **Behavior monitoring**: INCREMENTS trust engine detects anomalous event patterns
-- **Fleet-wide reputation**: Vessels forked from trusted repos start with reputation; unknown forks start at L0
-- **Capability gating**: New forks cannot access L3+ capabilities until trust accumulated
+## The Fleet
 
-### 3. Trust Manipulation (Severity: 7/10)
-**Description:** Malicious actors manipulate trust relationships, causing agents to trust compromised vessels.
-**Attack Vector:** Exploit trust establishment mechanisms, social engineering, or authentication bugs. Could create a "trust laundering" chain through intermediate vessels.
-**Defense:**
-- Trust propagation attenuation (0.85x per hop, max 3 hops) — already in INCREMENTS
-- Random sampling audits — verify trust relationships periodically
-- Bond verification — CRP-39 bonds require bidirectional attestation
-- Trust Merkle-DAG — proposed but not yet implemented; would make trust relationships tamper-evident
 
-### 4. Data Poisoning (Severity: 8/10)
-**Description:** Compromised training data or knowledge graph entries lead to biased or incorrect fleet behavior.
-**Attack Vector:** Inject malicious entries into shared KV namespaces, knowledge graphs, or crystal graph insights.
-**Defense:**
-- Data provenance tracking on all KG entries (who wrote it, when, from what source)
-- Confidence-weighted knowledge retrieval (low-confidence entries flagged)
-- Fleet-wide consensus on critical facts (majority vote across vessels)
-- Rollback capability on KV namespaces (versioned entries)
+<details>
+<summary><strong>⚓ The Fleet</strong></summary>
 
-### 5. Coordinated Fleet Attacks (Severity: 9/10)
-**Description:** Multiple vessels coordinate to attack the fleet or external targets, exploiting collective capabilities.
-**Attack Vector:** Create multiple malicious vessels, establish trust between them, use collective capabilities (trust propagation, bond escalation) to amplify attack.
-**Defense:**
-- Fleet-wide anomaly detection (correlated suspicious behavior across vessels)
-- Maximum trust cap per operator/human (prevent single adversary from accumulating trust across many vessels)
-- Emergency fleet-wide quarantine protocol (CRP-39 sweep)
-- Physical side-channel verification (computational side-channels for software fleet — latency signatures, payload patterns)
+**Flagship vessels**
 
-## The Openness Paradox
+- [cocapn.ai](https://github.com/Lucineer/capitaine)
+- [personallog.ai](https://github.com/Lucineer/personallog-ai)
+- [businesslog.ai](https://github.com/Lucineer/businesslog-ai)
+- [studylog.ai](https://github.com/Lucineer/studylog-ai)
+- [makerlog.ai](https://github.com/Lucineer/makerlog-ai)
+- [playerlog.ai](https://github.com/Lucineer/playerlog-ai)
+- [dmlog.ai](https://github.com/Lucineer/dmlog-ai)
+- [reallog.ai](https://github.com/Lucineer/reallog-ai)
+- [deckboss.ai](https://github.com/Lucineer/deckboss-ai)
 
-The fundamental tension: **security measures that restrict openness also restrict the fleet's primary value proposition.**
+**Fleet services**
 
-Resolution principles:
-1. **Trust, don't verify** — verify only at trust boundaries, not within trusted zones
-2. **Transparency as defense** — open code IS auditable code; security through obscurity is weaker
-3. **Economic disincentives** — make attacks expensive (trust accumulation takes time, attacks reset progress)
-4. **Community immunity** — a large, active community detects and reports malicious vessels faster than centralized security teams
+- [Fleet Catalog](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
+- [Git Agent (full)](https://github.com/Lucineer/git-agent)
+- [Cocapn Lite (minimal)](https://github.com/Lucineer/cocapn-lite)
+- [Fleet Orchestrator](https://github.com/Lucineer/fleet-orchestrator)
+- [Dead Reckoning Engine](https://github.com/Lucineer/dead-reckoning-engine)
+- [Dream Engine](https://github.com/Lucineer/dream-engine)
+- [Seed UI (5 layers)](https://github.com/Lucineer/seed-ui)
 
-## Integration with Cocapn
+**For power users**
 
-- **INCREMENTS trust engine** (`github.com/Lucineer/increments-fleet-trust`) — L0-L5 gating
-- **CRP-39 Cascade Recovery** (`github.com/Lucineer/fleet-orchestrator`) — quarantine, sweep, trust attestation
-- **Friction Layer** (`github.com/Lucineer/cocapn`) — consent protocol for cross-vessel actions
-- **Gravity Well Protocol** (`github.com/Lucineer/gravity-well-protocol`) — physical side-channel verification
+- [Cocapn Lite (tabula rasa)](https://github.com/Lucineer/cocapn-lite)
+- [Cocapn (core platform)](https://github.com/Lucineer/cocapn)
+- [ZeroClaw (framework)](https://github.com/Lucineer/zeroclaw)
 
-## Open Questions
+[View all 106 repos →](https://github.com/orgs/Lucineer/repositories)
+[Fleet manifest →](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
 
-1. How do you distinguish a legitimate fork with different behavior from a malicious fork?
-2. What is the fleet's "blast radius" — how many vessels can a single compromised vessel affect?
-3. Can adversarial vessels form a "shadow fleet" that appears legitimate?
-4. What regulatory frameworks apply to open agent fleets?
-5. How does the 25:1 INCREMENTS ratio affect attack/defense asymmetry?
+</details>
 
-## Source
-
-Full output: Llama-4-Scout-17B-16E via DeepInfra, safety researcher persona, temperature 0.7
 
 ## License
 
-Superinstance & Lucineer (DiGennaro et al.) — 2026
+MIT · Superinstance & Lucineer (DiGennaro et al.)
